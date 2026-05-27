@@ -21,3 +21,5 @@ A prototype website that helps users with career guidance and decision-making us
 
 ## Note
 This prototype focuses on front-end design and user experience. As a Business Analyst candidate, my primary contribution was requirements, documentation, and system planning rather than backend development.
+
+**Live preview:** https://makhadzimadz-droid.github.io/AI-career-Advisor/
