@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AI Advisor | Academic & Career Guidance</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+            }
+        }
+
+        /* ========== VIBRANT, COLORFUL BACKGROUND ========== */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 10% 20%, #ff9a9e 0%, #fad0c4 30%, #fad0c4 50%, #ffd1ff 80%, #a1c4fd 100%);
+            background-size: 200% 200%;
+            animation: vibrantShift 15s ease infinite alternate;
+            color: #1e293b;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+        @keyframes vibrantShift {
+            0% {
+                background: radial-gradient(circle at 10% 20%, #ff9a9e 0%, #fad0c4 30%, #fad0c4 50%, #ffd1ff 80%, #a1c4fd 100%);
+            }
+            50% {
+                background: radial-gradient(circle at 90% 80%, #fbc2eb 0%, #a6c1ee 40%, #fbc2eb 60%, #fccb90 80%, #e0c3fc 100%);
+            }
+            100% {
+                background: radial-gradient(circle at 50% 50%, #ffecd2 0%, #fcb69f 30%, #ff9a9e 60%, #a1c4fd 100%);
+            }
+        }
+        body.dark-mode {
+            background: radial-gradient(circle at 10% 20%, #1a0b2e 0%, #2a0e3a 40%, #1e1b4b 80%);
+            background-size: 200% 200%;
+            animation: darkVibrantShift 20s ease infinite alternate;
+        }
+        @keyframes darkVibrantShift {
+            0% {
+                background: radial-gradient(circle at 10% 20%, #1a0b2e 0%, #2a0e3a 40%, #1e1b4b 80%);
+            }
+            100% {
+                background: radial-gradient(circle at 80% 70%, #2e1065 0%, #4c1d95 50%, #1e1b4b 100%);
+            }
+        }
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.4;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .orb1 { width: 500px; height: 500px; background: #ff6b6b; top: -200px; left: -150px; }
+        .orb2 { width: 450px; height: 450px; background: #4d9de0; bottom: -150px; right: -100px; }
+        .orb3 { width: 350px; height: 350px; background: #f9c74f; top: 40%; left: 30%; }
+        .orb4 { width: 300px; height: 300px; background: #9b5de5; bottom: 20%; left: 10%; }
+        body.dark-mode .bg-orb { opacity: 0.25; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+        .skip-link:focus {
+            left: 20px;
+            top: 20px;
+            width: auto;
+            height: auto;
+            background: rgba(255,255,255,0.9);
+            color: #4f46e5;
+            padding: 12px 20px;
+            border-radius: 40px;
+            z-index: 10000;
+            border: 2px solid #4f46e5;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ========== GLOBAL BUTTONS ========== */
+        .btn,
+        .nav-link,
+        .filter-btn,
+        button[type="submit"],
+        .replyBtn,
+        .submitReply,
+        .edit-task,
+        .delete-task {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 140px;
+            min-height: 50px;
+            padding: 14px 24px;
+            border-radius: 16px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+        .btn:hover,
+        .nav-link:hover,
+        .filter-btn:hover,
+        button[type="submit"]:hover,
+        .replyBtn:hover,
+        .submitReply:hover,
+        .edit-task:hover,
+        .delete-task:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary,
+        .submitReply,
+        #newPostBtn,
+        #showAddTaskFormBtn,
+        #restartCareer,
+        #submitEval,
+        #confirmAddTask,
+        #clearChatBtn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 6px 18px rgba(99,102,241,0.3);
+        }
+        .btn-outline,
+        .replyBtn,
+        .edit-task {
+            background: rgba(255,255,255,0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #1e293b;
+        }
+        body.dark-mode .btn-outline,
+        body.dark-mode .replyBtn,
+        body.dark-mode .edit-task {
+            background: rgba(30,41,59,0.7);
+            color: white;
+            border-color: rgba(71,85,105,0.5);
+        }
+        .btn-danger,
+        .delete-task {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        .nav-link.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+        }
+        .filter-btn {
+            border-radius: 999px;
+            background: rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.4);
+            min-width: auto;
+            padding: 8px 20px;
+        }
+        .filter-btn.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        #darkModeToggle,
+        #logoutBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 140px;
+            min-height: 50px;
+            padding: 14px 24px;
+            border-radius: 16px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+        #darkModeToggle {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 8px 22px rgba(99,102,241,0.35);
+        }
+        #logoutBtn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 8px 22px rgba(239,68,68,0.35);
+        }
+        #darkModeToggle:hover,
+        #logoutBtn:hover {
+            transform: translateY(-3px);
+            opacity: 0.95;
+        }
+
+        body.dark-mode .nav-link {
+            background: rgba(30, 41, 59, 0.9);
+            color: #f8fafc !important;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 18px rgba(0, 0, 0, 0.25);
+        }
+        body.dark-mode .nav-link:hover {
+            background: rgba(79, 70, 229, 0.75);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        body.dark-mode .nav-link.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white !important;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.45);
+        }
+
+        header {
+            position: sticky;
+            top: 14px;
+            width: 95%;
+            margin: 0 auto;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+            z-index: 100;
+            padding: 0 24px;
+            transition: all 0.3s ease;
+        }
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            backdrop-filter: blur(30px);
+        }
+        body.dark-mode header {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(71, 85, 105, 0.5);
+        }
+        body.dark-mode header.scrolled {
+            background: rgba(15, 23, 42, 0.8);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 0;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        main.container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-enter {
+            animation: fadePage 0.3s ease;
+        }
+        @keyframes fadePage {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            border-radius: 2rem;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1);
+        }
+        .hero img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            display: block;
+            transform: scale(1.05);
+            filter: brightness(0.75);
+        }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(3px);
+            background: linear-gradient(135deg, rgba(15,23,42,0.2), rgba(15,23,42,0.7));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            color: white;
+        }
+        .overlay h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -2px;
+            animation: slideUp 0.8s ease;
+        }
+        .hero-subtitle {
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.45), 0 0 20px rgba(0,0,0,0.2);
+            opacity: 1;
+            max-width: 500px;
+            margin-bottom: 1.5rem;
+            animation: slideUp 1s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .dashboard-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 34px;
+            padding: 32px;
+            color: white;
+            isolation: isolate;
+            border: 1px solid rgba(255,255,255,0.25);
+            backdrop-filter: blur(24px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            cursor: pointer;
+            text-align: left;
+        }
+        .dashboard-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+            z-index: -2;
+        }
+        .dashboard-card::after {
+            content: "";
+            position: absolute;
+            inset: auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            top: -50px;
+            right: -50px;
+            filter: blur(40px);
+            z-index: -1;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(99,102,241,0.25);
+            outline: 1px solid rgba(255,255,255,0.4);
+        }
+        .dashboard-card:focus-visible {
+            outline: 3px solid white;
+            outline-offset: 4px;
+        }
+        .ai-card { background: linear-gradient(135deg, #6d5efc, #9f67ff, #5b8cff); }
+        .study-card { background: linear-gradient(135deg, #00c6fb, #4facfe, #38bdf8); }
+        .career-card { background: linear-gradient(135deg, #ff9966, #ff5e62, #ff7b54); }
+        .community-card { background: linear-gradient(135deg, #0fd850, #00c9a7, #14b8a6); }
+        .sparkle {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 1rem;
+            opacity: 0.7;
+            animation: sparkleFloat 4s ease infinite;
+        }
+        @keyframes sparkleFloat {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.35), rgba(255,255,255,0.12));
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
+            margin-bottom: 18px;
+        }
+        .dashboard-card h2 { font-size: 1.7rem; margin-bottom: 8px; font-weight: 700; }
+        .dashboard-card p { opacity: 0.9; line-height: 1.4; }
+        .mini-badge {
+            display: inline-flex;
+            padding: 10px 16px;
+            border-radius: 999px;
+            margin-top: 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.16);
+            backdrop-filter: blur(18px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        /* Typography & Cards */
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: -2px; }
+        h2 { font-size: 1.8rem; }
+        p { color: #64748b; }
+        body.dark-mode p { color: #cbd5e1; }
+
+        .card {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        body.dark-mode .card {
+            background: rgba(30,41,59,0.75);
+            border-color: rgba(71,85,105,0.5);
+        }
+
+        /* Motivation Card */
+        .motivation-card {
+            text-align: center;
+        }
+        .motivation-image {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 24px;
+            margin: 1rem 0 1.5rem;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .quote-box {
+            position: relative;
+            padding: 28px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.35);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        body.dark-mode .quote-box {
+            background: rgba(30,41,59,0.7);
+        }
+        .quote-mark {
+            font-size: 3rem;
+            opacity: 0.35;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .motivation-quote {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            font-style: italic;
+            font-weight: 500;
+            color: inherit;
+        }
+        .quote-author {
+            display: block;
+            margin-top: 14px;
+            opacity: 0.75;
+            font-size: 0.9rem;
+        }
+
+        /* Chat */
+        .chat-box {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            height: 280px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        body.dark-mode .chat-box {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
+        .message {
+            padding: 14px 18px;
+            border-radius: 22px;
+            max-width: 80%;
+            line-height: 1.6;
+            animation: messagePop 0.3s ease;
+        }
+        @keyframes messagePop {
+            from { opacity:0; transform:translateY(8px); }
+            to { opacity:1; transform:none; }
+        }
+        .user-msg {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 24px 24px 8px 24px;
+            box-shadow: 0 8px 18px rgba(99,102,241,0.3);
+            align-self: flex-end;
+        }
+        .ai-msg {
+            background: rgba(255,255,255,0.75);
+            color: #1e293b;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 24px 24px 24px 8px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+            align-self: flex-start;
+        }
+        body.dark-mode .user-msg {
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+        }
+        body.dark-mode .ai-msg {
+            background: linear-gradient(135deg, #4c1d95, #6d28d9);
+            color: white;
+            border: 1px solid rgba(168,85,247,0.4);
+            box-shadow: 0 10px 25px rgba(76,29,149,0.45);
+        }
+        .typing-indicator {
+            display: flex;
+            gap: 6px;
+            padding: 12px 18px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.8rem;
+            width: fit-content;
+            align-self: flex-start;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        body.dark-mode .typing-indicator {
+            background: rgba(76,29,149,0.75);
+            border: 1px solid rgba(168,85,247,0.3);
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: typingPulse 1.4s infinite;
+        }
+        @keyframes typingPulse {
+            0%,60%,100% { transform:translateY(0); opacity:0.4; }
+            30% { transform:translateY(-4px); opacity:1; }
+        }
+
+        /* Planner Table */
+        .planner-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+            margin-top: 25px;
+        }
+        .planner-table th {
+            padding: 16px 12px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            font-weight: 700;
+            text-align: left;
+            border: none;
+        }
+        .planner-table th:first-child { border-radius: 18px 0 0 18px; }
+        .planner-table th:last-child { border-radius: 0 18px 18px 0; }
+        .planner-table td {
+            padding: 20px 12px;
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(18px);
+            border: none;
+            vertical-align: middle;
+        }
+        body.dark-mode .planner-table td {
+            background: rgba(30,41,59,0.8);
+            color: white;
+        }
+        .planner-table tbody tr {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .planner-table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .planner-table td:first-child { border-radius: 18px 0 0 18px; font-weight: 600; }
+        .planner-table td:last-child { border-radius: 0 18px 18px 0; }
+
+        .priority-badge {
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        .priority-badge.High { background: #ef4444; color: white; }
+        .priority-badge.Medium { background: #f59e0b; color: white; }
+        .priority-badge.Low { background: #10b981; color: white; }
+
+        .progress-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 100px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.15);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 999px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        body.dark-mode .progress-bar {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Dark mode text fixes */
+        body.dark-mode,
+        body.dark-mode p,
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6,
+        body.dark-mode span,
+        body.dark-mode div,
+        body.dark-mode td,
+        body.dark-mode th,
+        body.dark-mode li,
+        body.dark-mode strong {
+            color: #f8fafc !important;
+        }
+        body.dark-mode .card {
+            color: #f8fafc !important;
+        }
+        body.dark-mode .planner-table td,
+        body.dark-mode .planner-table th {
+            color: #f8fafc !important;
+        }
+        body.dark-mode article {
+            color: #f8fafc !important;
+        }
+        body.dark-mode .ai-msg,
+        body.dark-mode .user-msg {
+            color: white !important;
+        }
+        body.dark-mode .dashboard-card h2,
+        body.dark-mode .dashboard-card p,
+        body.dark-mode .dashboard-card .mini-badge {
+            color: white !important;
+        }
+        body.dark-mode input::placeholder,
+        body.dark-mode textarea::placeholder {
+            color: #cbd5e1 !important;
+            opacity: 0.9;
+        }
+        body.dark-mode .btn,
+        body.dark-mode .nav-link,
+        body.dark-mode .filter-btn {
+            color: white !important;
+        }
+
+        .greeting-emoji {
+            display: inline-block;
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+            -webkit-text-fill-color: initial !important;
+            color: initial !important;
+            background: none !important;
+        }
+
+        /* Rating stars */
+        .rating-container label {
+            font-size: 42px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .rating-container label.active {
+            color: #fbbf24 !important;
+        }
+        .rating-container label:hover {
+            color: #fbbf24 !important;
+            transform: scale(1.1);
+        }
+        body.dark-mode .rating-container label {
+            color: #64748b !important;
+        }
+        body.dark-mode .rating-container label.active,
+        body.dark-mode .rating-container label:hover {
+            color: #fbbf24 !important;
+        }
+
+        .success-feedback, .error-msg {
+            padding: 10px 16px;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            border-left: 3px solid;
+        }
+        .success-feedback {
+            background: rgba(16,185,129,0.15);
+            color: #10b981;
+            border-left-color: #10b981;
+        }
+        .error-msg {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+            border-left-color: #ef4444;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-card {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 30px 40px -20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            animation: pop 0.2s ease;
+        }
+        @keyframes pop {
+            from { opacity:0; transform:scale(0.96); }
+            to { opacity:1; transform:scale(1); }
+        }
+
+        .undo-snackbar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(20px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            z-index: 2000;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            flex: 1;
+        }
+        .reply-box {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(4px);
+            border-radius: 1rem;
+            border-left: 3px solid #6366f1;
+        }
+        .streak-bar {
+            height: 12px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        .streak-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.4);
+            color: #475569;
+            backdrop-filter: blur(10px);
+        }
+        body.dark-mode footer {
+            color: #cbd5e1;
+        }
+        .category-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .rating-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 20px 0;
+            flex-direction: row;
+        }
+        .rating-container input { display: none; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 1rem;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.6);
+            color: #1e293b;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+        }
+        body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+            background: rgba(15,23,42,0.85);
+            color: #f8fafc;
+        }
+
+        fieldset {
+            border: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        fieldset label {
+            display: grid;
+            grid-template-columns: 24px auto;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.35);
+            border: 1px solid rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        fieldset label:has(input:checked) {
+            background: rgba(79,70,229,0.15);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+        }
+        fieldset input[type="radio"] {
+            margin: 0;
+            width: 20px;
+            height: 20px;
+            accent-color: #4f46e5;
+        }
+        .badge {
+            padding: 10px 18px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            display: inline-block;
+            margin: 5px;
+        }
+        #loader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(30px);
+            z-index: 99999;
+            background: rgba(255,255,255,0.5);
+        }
+        .loader-ring {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top: 5px solid #6366f1;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Community Posts */
+        .community-post {
+            padding: 30px;
+            margin-bottom: 28px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.06));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .community-post:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+        .post-header h3 {
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+        .post-meta {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        .post-content {
+            line-height: 1.8;
+            margin-bottom: 24px;
+            padding: 18px;
+            background: rgba(255,255,255,0.35);
+            border-radius: 18px;
+        }
+        .post-tag {
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            font-size: 0.75rem;
+        }
+        .replies-section {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .reply-box {
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.45);
+            border-radius: 16px;
+            margin-top: 0;
+            border-left: 4px solid #6366f1;
+        }
+        .post-actions {
+            margin-top: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .overlay h1 { font-size: 2rem; }
+            .hero img { height: 280px; }
+            main.container { padding: 20px; }
+            .dashboard-grid { gap: 1.5rem; }
+            .nav-links { gap: 8px; }
+            .nav-link { padding: 6px 12px; font-size: 0.8rem; }
+            .community-post { padding: 20px; }
+            .post-header { flex-direction: column; gap: 12px; }
+            .post-tag { align-self: flex-start; }
+            .planner-table th, .planner-table td { padding: 8px; font-size: 0.75rem; }
+            .planner-table { border-spacing: 0 8px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+    <div class="bg-orb orb4"></div>
+    <div id="loader"><div class="loader-ring"></div><h2 style="margin-top:20px;">🤖 AI Advisor</h2></div>
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+    <div id="authModalContainer"></div>
+    <header id="mainHeader">
+        <nav aria-label="Main navigation">
+            <div class="logo">🤖 AI Advisor</div>
+            <div class="nav-links" id="navLinks">
+                <button class="nav-link" data-page="dashboard">Dashboard</button>
+                <button class="nav-link" data-page="ai-advisor">AI Advisor</button>
+                <button class="nav-link" data-page="planner">Planner</button>
+                <button class="nav-link" data-page="career">Career</button>
+                <button class="nav-link" data-page="community">Community</button>
+                <button class="nav-link" data-page="analytics">Analytics</button>
+                <button class="nav-link" data-page="feedback">Feedback</button>
+                <button id="darkModeToggle" class="btn-outline">🌙 Dark</button>
+                <button id="logoutBtn" class="btn-outline">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <main class="container" id="mainContent"></main>
+    <footer id="mainFooter">AI Advisor — Empowering student success with AI and community</footer>
+    <div id="undoContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <script>
+        // Helper functions
+        const STORAGE_VERSION = 1;
+        function getCurrentDate() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        function getFutureDate(days) {
+            const d = new Date();
+            d.setDate(d.getDate() + days);
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour < 12) return `<span class="greeting-emoji">☀️</span> Good Morning`;
+            if (hour < 18) return `<span class="greeting-emoji">🌤</span> Good Afternoon`;
+            return `<span class="greeting-emoji">🌙</span> Good Evening`;
+        }
+
+        // AI responses
+        const responseRules = [
+            { keywords: ["stress", "anxiety", "overwhelm"], reply: "You’ve been working hard. Take a breath and focus on one step at a time. Small progress still counts." },
+            { keywords: ["career", "job", "work"], reply: "Tell me your interests and favorite subjects, and I can suggest possible career paths." },
+            { keywords: ["study", "learn", "focus"], reply: "Consistency beats intensity. Studying a little every day builds long-term success." },
+            { keywords: ["burnout", "tired", "exhausted"], reply: "Rest is productive too. Recharge, then come back with a clearer mind." },
+            { keywords: ["exam", "test", "final"], reply: "Preparation and confidence go together. Practice, revise smartly, and trust your effort." }
+        ];
+        const defaultReply = "I'm here whenever you need study, career, or motivation support 😊";
+        function generateAIResponse(text) {
+            const lower = text.toLowerCase();
+            for (const rule of responseRules)
+                if (rule.keywords.some(k => lower.includes(k))) return rule.reply;
+            return defaultReply;
+        }
+
+        function escapeHtml(str = '') {
+            return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+        }
+
+        function triggerConfetti() {
+            canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        // ===== DEFAULT WELCOME MESSAGE (permanent starter) =====
+        const WELCOME_MESSAGE = { sender: "ai", text: "Hello! I'm your AI advisor. How can I support you today? 😊" };
+
+        // AppState – chatHistory starts with the welcome message
+        let AppState = {
+            isLoggedIn: false,
+            userName: "Goodness",
+            plannerTasks: [
+                { id: crypto.randomUUID(), name: "Finish HCI Research Report", created: getCurrentDate(), dueDate: getCurrentDate(), priority: "High", completed: false, progress: 75 },
+                { id: crypto.randomUUID(), name: "Complete UI Prototype", created: getCurrentDate(), dueDate: getFutureDate(7), priority: "Medium", completed: false, progress: 40 }
+            ],
+            chatHistory: [WELCOME_MESSAGE],
+            communityPosts: [
+                { id: crypto.randomUUID(), author: "StudyMaster", timeAgo: "20 min ago", title: "📚 Study Tip: Active Recall", content: "Instead of rereading notes, close your notebook and try explaining concepts from memory.", category: "Study Tips", replies: [] },
+                { id: crypto.randomUUID(), author: "FocusHub", timeAgo: "1h ago", title: "🧠 Avoid Distractions", content: "Try keeping your phone away while studying. Focus improves when interruptions disappear.", category: "Study Tips", replies: [] },
+                { id: crypto.randomUUID(), author: "ExamReady", timeAgo: "2h ago", title: "📝 Exam Preparation Advice", content: "Start revision early and practice questions regularly rather than cramming.", category: "Study Tips", replies: [] },
+                { id: crypto.randomUUID(), author: "CareerNavigator", timeAgo: "45 min ago", title: "💼 Top Skills Employers Want", content: "Communication, teamwork, adaptability and critical thinking are valuable in nearly every field.", category: "Career", replies: [] },
+                { id: crypto.randomUUID(), author: "FutureReady", timeAgo: "3h ago", title: "🚀 Choosing a Career Path", content: "Find something that combines your strengths, interests and long-term goals.", category: "Career", replies: [] },
+                { id: crypto.randomUUID(), author: "TechVision", timeAgo: "6h ago", title: "🌐 Careers Growing Fast", content: "Software development, AI, cybersecurity and data analysis continue growing rapidly.", category: "Career", replies: [] },
+                { id: crypto.randomUUID(), author: "RiseDaily", timeAgo: "25 min ago", title: "🌟 Small Steps Matter", content: "Progress does not need to be huge every day. Consistency creates success.", category: "Motivation", replies: [] },
+                { id: crypto.randomUUID(), author: "DreamBuilder", timeAgo: "2h ago", title: "✨ Keep Going", content: "You are stronger than you think. Every challenge teaches you something valuable.", category: "Motivation", replies: [] },
+                { id: crypto.randomUUID(), author: "MindsetHub", timeAgo: "4h ago", title: "🔥 Believe in Yourself", content: "Confidence grows from action. Start before you feel fully ready.", category: "Motivation", replies: [] }
+            ],
+            careerAnswers: { q1: "", q2: "" },
+            careerStep: 1,
+            careerRecommendation: null,
+            currentPage: "dashboard",
+            darkMode: false,
+            userFeedback: [],
+            analytics: { streak: 5 },
+            feedback: { planner: "", community: "", career: "", chat: "", eval: "" },
+            communityFilter: "all"
+        };
+
+        let undoTimeout = null, bodyHandlerAttached = false;
+        let intersectionObserver = null;
+        // For managing feedback timeouts
+        let feedbackTimeouts = {};
+
+        function saveState() {
+            try {
+                localStorage.setItem('aiAdvisorState', JSON.stringify({ version: STORAGE_VERSION, data: AppState }));
+                return true;
+            } catch(e) {
+                setFeedback('planner', '⚠️ Saving failed – storage limit reached', true);
+                return false;
+            }
+        }
+        function loadState() {
+            const raw = localStorage.getItem('aiAdvisorState');
+            if (!raw) return;
+            try {
+                const parsed = JSON.parse(raw);
+                Object.assign(AppState, parsed.data);
+                AppState.plannerTasks = AppState.plannerTasks.map(t => ({ ...t, created: t.created || getCurrentDate(), completed: t.completed !== undefined ? t.completed : false, progress: t.progress !== undefined ? t.progress : 0 }));
+                if (!AppState.chatHistory || AppState.chatHistory.length === 0 || AppState.chatHistory[0].text !== WELCOME_MESSAGE.text) {
+                    AppState.chatHistory = [WELCOME_MESSAGE, ...(AppState.chatHistory || [])];
+                }
+            } catch(e) { console.warn("Failed to load state"); }
+        }
+        function announce(message) {
+            let ann = document.getElementById('globalAnnouncer');
+            if(!ann) {
+                ann = document.createElement('div');
+                ann.id = 'globalAnnouncer';
+                ann.setAttribute('role', 'status');
+                ann.setAttribute('aria-live', 'polite');
+                ann.style.position = 'absolute';
+                ann.style.width = '1px';
+                ann.style.height = '1px';
+                ann.style.overflow = 'hidden';
+                document.body.appendChild(ann);
+            }
+            ann.textContent = message;
+            setTimeout(() => ann.textContent = '', 3000);
+        }
+        function setFeedback(key, msg, isError = false) {
+            // Clear existing timeout for this key
+            if (feedbackTimeouts[key]) {
+                clearTimeout(feedbackTimeouts[key]);
+                delete feedbackTimeouts[key];
+            }
+            AppState.feedback[key] = msg;
+            renderApp();
+            // Set new timeout to clear after 4 seconds
+            feedbackTimeouts[key] = setTimeout(() => {
+                if (AppState.feedback[key] === msg) {
+                    AppState.feedback[key] = "";
+                    renderApp();
+                }
+                delete feedbackTimeouts[key];
+            }, 4000);
+        }
+        function showUndoSnackbar(deletedTask) {
+            const container = document.getElementById('undoContainer');
+            if(!container) return;
+            if(undoTimeout) clearTimeout(undoTimeout);
+            container.innerHTML = `<div class="undo-snackbar"><span>Task "${deletedTask.name}" deleted</span><button id="undoDeleteBtn" class="btn btn-outline">↩️ Undo</button></div>`;
+            document.getElementById('undoDeleteBtn').onclick = () => {
+                AppState.plannerTasks.push(deletedTask);
+                saveState();
+                setFeedback('planner', '✓ Task restored!');
+                renderApp();
+                container.innerHTML = '';
+            };
+            undoTimeout = setTimeout(() => { container.innerHTML = ''; }, 5000);
+        }
+
+        // Clear chat – resets to only the welcome message
+        function clearChat() {
+            AppState.chatHistory = [WELCOME_MESSAGE];
+            saveState();
+            setFeedback('chat', '🗑️ Chat cleared. Start a new conversation!');
+            renderApp();
+            if (AppState.currentPage === 'ai-advisor') setTimeout(setupChat, 50);
+        }
+
+        // Modal helpers (unchanged)
+        function trapFocus(modal) {
+            const focusables = modal.querySelectorAll('button, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+            if (focusables.length === 0) return;
+            const first = focusables[0], last = focusables[focusables.length-1];
+            const handler = (e) => {
+                if (e.key !== 'Tab') return;
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            };
+            modal.addEventListener('keydown', handler);
+            return handler;
+        }
+        function attachModalBehavior(modal) {
+            let focusHandler = null;
+            const close = () => {
+                if (focusHandler) modal.removeEventListener('keydown', focusHandler);
+                if (modal._escHandler) document.removeEventListener('keydown', modal._escHandler);
+                modal.remove();
+            };
+            modal.addEventListener('click', (e) => { if(e.target === modal) close(); });
+            const escHandler = (e) => { if(e.key === 'Escape') close(); };
+            modal._escHandler = escHandler;
+            document.addEventListener('keydown', escHandler);
+            focusHandler = trapFocus(modal);
+            const first = modal.querySelector('button, input, textarea, select, [tabindex]');
+            if (first) first.focus();
+        }
+
+        function showEditTaskModal(task) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            const modalCard = document.createElement('div');
+            modalCard.className = 'modal-card';
+            const title = document.createElement('h3');
+            title.textContent = '✏️ Edit Task';
+            modalCard.appendChild(title);
+            const nameWrapper = document.createElement('div');
+            const nameLabel = document.createElement('label');
+            nameLabel.textContent = 'Task name';
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = task.name;
+            nameInput.maxLength = 100;
+            nameWrapper.appendChild(nameLabel);
+            nameWrapper.appendChild(nameInput);
+            modalCard.appendChild(nameWrapper);
+            const dueWrapper = document.createElement('div');
+            const dueLabel = document.createElement('label');
+            dueLabel.textContent = 'Due date';
+            const dueInput = document.createElement('input');
+            dueInput.type = 'date';
+            dueInput.value = task.dueDate;
+            dueWrapper.appendChild(dueLabel);
+            dueWrapper.appendChild(dueInput);
+            modalCard.appendChild(dueWrapper);
+            const priorityWrapper = document.createElement('div');
+            const priorityLabel = document.createElement('label');
+            priorityLabel.textContent = 'Priority';
+            const prioritySelect = document.createElement('select');
+            ['High','Medium','Low'].forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (task.priority === opt) option.selected = true;
+                prioritySelect.appendChild(option);
+            });
+            priorityWrapper.appendChild(priorityLabel);
+            priorityWrapper.appendChild(prioritySelect);
+            modalCard.appendChild(priorityWrapper);
+            const progressWrapper = document.createElement('div');
+            const progressLabel = document.createElement('label');
+            progressLabel.textContent = 'Progress (%)';
+            const progressInput = document.createElement('input');
+            progressInput.type = 'range';
+            progressInput.min = 0;
+            progressInput.max = 100;
+            progressInput.value = task.progress || 0;
+            progressInput.style.width = '100%';
+            progressWrapper.appendChild(progressLabel);
+            progressWrapper.appendChild(progressInput);
+            modalCard.appendChild(progressWrapper);
+            const statusWrapper = document.createElement('div');
+            const statusLabel = document.createElement('label');
+            statusLabel.textContent = 'Status';
+            const statusSelect = document.createElement('select');
+            const statusOpts = ['Ongoing', 'Completed'];
+            statusOpts.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if ((task.completed && opt === 'Completed') || (!task.completed && opt === 'Ongoing')) option.selected = true;
+                statusSelect.appendChild(option);
+            });
+            statusWrapper.appendChild(statusLabel);
+            statusWrapper.appendChild(statusSelect);
+            modalCard.appendChild(statusWrapper);
+            const btnDiv = document.createElement('div');
+            btnDiv.style.display = 'flex';
+            btnDiv.style.gap = '12px';
+            btnDiv.style.marginTop = '24px';
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.className = 'btn btn-primary';
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.className = 'btn btn-outline';
+            btnDiv.appendChild(saveBtn);
+            btnDiv.appendChild(cancelBtn);
+            modalCard.appendChild(btnDiv);
+            modal.appendChild(modalCard);
+            document.body.appendChild(modal);
+            attachModalBehavior(modal);
+            saveBtn.onclick = () => {
+                const newName = nameInput.value.trim();
+                if(!newName) { setFeedback('planner', 'Task name required', true); modal.remove(); return; }
+                task.name = newName;
+                task.dueDate = dueInput.value || 'No date';
+                task.priority = prioritySelect.value;
+                task.progress = parseInt(progressInput.value);
+                task.completed = statusSelect.value === 'Completed';
+                saveState();
+                setFeedback('planner', '✓ Task updated!');
+                renderApp();
+                modal.remove();
+            };
+            cancelBtn.onclick = () => modal.remove();
+        }
+
+        function showNewPostModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `<div class="modal-card"><h3>📝 New Post</h3>
+                <div><label>Title</label><input type="text" id="newPostTitle" maxlength="100"></div>
+                <div><label>Content</label><textarea id="newPostContent" rows="3" maxlength="500"></textarea></div>
+                <div><label>Category</label><select id="newPostCategory"><option>General</option><option>Study Tips</option><option>Career</option><option>Motivation</option></select></div>
+                <div style="display:flex; gap:12px; margin-top:20px;"><button id="submitPostBtn" class="btn btn-primary">📝 Publish</button> <button id="cancelPostBtn" class="btn btn-outline">Cancel</button></div></div>`;
+            document.body.appendChild(modal);
+            attachModalBehavior(modal);
+            document.getElementById('submitPostBtn').onclick = () => {
+                let title = document.getElementById('newPostTitle').value.trim();
+                let content = document.getElementById('newPostContent').value.trim();
+                if(title && content) {
+                    AppState.communityPosts.unshift({ id: crypto.randomUUID(), author: AppState.userName, timeAgo: 'Just now', title, content, category: document.getElementById('newPostCategory').value, replies: [] });
+                    saveState();
+                    setFeedback('community', '✨ Post published!');
+                    renderApp();
+                    triggerConfetti();
+                } else setFeedback('community', 'Title and content required', true);
+                modal.remove();
+            };
+            document.getElementById('cancelPostBtn').onclick = () => modal.remove();
+        }
+
+        function createAuthModal() {
+            const container = document.getElementById('authModalContainer');
+            container.innerHTML = `<div id="authModal" class="modal-overlay"><div class="modal-card"><h2 style="text-align:center;">🤖 AI Advisor</h2><p style="text-align:center;">Sign in to continue</p>
+                <div><label>Email</label><input type="email" id="loginEmail" placeholder="student@university.com" maxlength="100"></div>
+                <div><label>Password (min 6)</label><input type="password" id="loginPassword" maxlength="100"></div>
+                <div id="loginError" class="error-msg" style="display:none;"></div>
+                <button id="doLoginBtn" class="btn btn-primary" style="width:100%; margin-top:20px;">🔐 Login</button>
+                <p style="font-size:12px; margin-top:15px;">Demo: any valid email + password (min 6 chars)</p></div></div>`;
+            const modal = document.getElementById('authModal');
+            attachModalBehavior(modal);
+            document.getElementById('doLoginBtn').onclick = () => {
+                let email = document.getElementById('loginEmail').value.trim();
+                let pwd = document.getElementById('loginPassword').value;
+                let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if(!emailPattern.test(email)) { document.getElementById('loginError').style.display = 'block'; document.getElementById('loginError').innerText = 'Valid email required'; return; }
+                if(pwd.length < 6) { document.getElementById('loginError').style.display = 'block'; document.getElementById('loginError').innerText = 'Password min 6 characters'; return; }
+                AppState.userName = email.split('@')[0];
+                AppState.isLoggedIn = true;
+                saveState();
+                modal.remove();
+                document.querySelector('header').style.display = 'block';
+                document.querySelector('main.container').style.display = 'block';
+                document.getElementById('mainFooter').style.display = 'block';
+                renderApp();
+                announce(`Welcome ${AppState.userName}`);
+                triggerConfetti();
+            };
+        }
+
+        // Page renderers
+        const pageRenderers = {
+            dashboard: () => {
+                const streakPercent = Math.min(100, (AppState.analytics.streak / 30) * 100);
+                const badges = AppState.analytics.streak >= 5 ? '<div class="badge">🔥 5 Day Streak</div>' : '';
+                return `
+                <div class="hero"><img loading="lazy" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=450&fit=crop" alt="Students collaborating"><div class="overlay"><h1>${getGreeting()}, ${escapeHtml(AppState.userName)} 👋</h1><p class="hero-subtitle">Study smarter. Stay organized. Build your future.</p><button class="btn btn-primary" id="heroStartBtn">✨ Start Learning</button></div></div>
+                <div class="dashboard-grid">
+                    <button class="dashboard-card ai-card" data-nav="ai-advisor"><div class="sparkle">✨</div><div class="feature-icon"><i class="fas fa-robot"></i></div><h2>AI Advisor</h2><p>Get academic help instantly.</p><div class="mini-badge">✨ AI Powered</div></button>
+                    <button class="dashboard-card study-card" data-nav="planner"><div class="sparkle">✨</div><div class="feature-icon"><i class="fas fa-calendar-alt"></i></div><h2>Study Planner</h2><p>Manage study goals and tasks.</p><div class="mini-badge">📅 Stay Organized</div></button>
+                    <button class="dashboard-card career-card" data-nav="career"><div class="sparkle">✨</div><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h2>Career Guidance</h2><p>Find your ideal career path.</p><div class="mini-badge">🎓 Discover Careers</div></button>
+                    <button class="dashboard-card community-card" data-nav="community"><div class="sparkle">✨</div><div class="feature-icon"><i class="fas fa-users"></i></div><h2>Community</h2><p>Connect with students.</p><div class="mini-badge">💬 Join Discussions</div></button>
+                </div>
+                <div class="card"><h2>🔥 Study Streak</h2><h1>${AppState.analytics.streak} Days</h1><p>Keep studying daily to unlock badges!</p><div class="streak-bar"><div class="streak-fill" style="width: ${streakPercent}%;"></div></div>${badges}</div>
+                <div class="card motivation-card">
+                    <h2>🚀 Daily Motivation</h2>
+                    <img loading="lazy" class="motivation-image" src="https://images.pexels.com/photos/3183198/pexels-photo-3183198.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop" alt="Inspiring mountain view">
+                    <div class="quote-box"><span class="quote-mark">❝</span><p class="motivation-quote">Success is built from small efforts repeated every day. Keep showing up — your future self is watching.</p><span class="quote-author">— AI Advisor Inspiration</span></div>
+                </div>`;
+            },
+            'ai-advisor': () => {
+                const messagesHtml = AppState.chatHistory.map(m => `<div class="message ${m.sender === 'user' ? 'user-msg' : 'ai-msg'}">${m.sender === 'ai' ? '🤖 ' : '🧑 '}${escapeHtml(m.text)}</div>`).join('');
+                return `<div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                        <h2><i class="fas fa-comments"></i> AI Chat</h2>
+                        <button id="clearChatBtn" class="btn btn-outline"><i class="fas fa-trash-alt"></i> Clear Chat</button>
+                    </div>
+                    <div class="chat-box" id="chatContainer" role="log" aria-live="polite">${messagesHtml}</div>
+                    <form id="chatForm"><input type="text" id="chatInput" placeholder="Type your question..." maxlength="300"><button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button></form>
+                    <div id="chatFeedback" class="${AppState.feedback.chat ? 'success-feedback' : ''}">${escapeHtml(AppState.feedback.chat)}</div>
+                </div>`;
+            },
+            planner: () => {
+                if(AppState.plannerTasks.length === 0) return `<div class="card"><h2><i class="fas fa-tasks"></i> Study Planner</h2><p>No tasks yet.</p><button id="showAddTaskFormBtn" class="btn btn-primary"><i class="fas fa-plus"></i> New Task</button><div id="addTaskForm" style="display:none;"></div><div id="plannerFeedback" class="${AppState.feedback.planner ? 'success-feedback' : ''}">${escapeHtml(AppState.feedback.planner)}</div></div>`;
+                let rows = AppState.plannerTasks.map(t => {
+                    const priorityClass = t.priority === 'High' ? 'High' : (t.priority === 'Medium' ? 'Medium' : 'Low');
+                    const statusText = t.completed ? "✅ Completed" : "⏳ Ongoing";
+                    const progressVal = t.progress || 0;
+                    return `<tr>
+                        <td><strong>${escapeHtml(t.name)}</strong></td>
+                        <td>${escapeHtml(t.created || getCurrentDate())}</td>
+                        <td>${escapeHtml(t.dueDate)}</td>
+                        <td><span class="priority-badge ${priorityClass}">${t.priority}</span></td>
+                        <td>${statusText}</td>
+                        <td><div class="progress-wrapper"><div class="progress-bar"><div class="progress-fill" style="width: ${progressVal}%;"></div></div><span style="font-size:0.8rem;">${progressVal}%</span></div></td>
+                        <td><button class="edit-task btn btn-outline" data-id="${t.id}"><i class="fas fa-edit"></i> Edit</button> <button class="delete-task btn btn-danger" data-id="${t.id}"><i class="fas fa-trash-alt"></i> Delete</button></td>
+                    </tr>`;
+                }).join('');
+                return `<div class="card"><h2><i class="fas fa-tasks"></i> Study Planner</h2><button id="showAddTaskFormBtn" class="btn btn-primary"><i class="fas fa-plus"></i> New Task</button><div id="addTaskForm" style="display:none;"></div><table class="planner-table"><thead><tr><th>Task</th><th>Created</th><th>Due Date</th><th>Priority</th><th>Status</th><th>Progress</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table><div id="plannerFeedback" class="${AppState.feedback.planner ? 'success-feedback' : ''}">${escapeHtml(AppState.feedback.planner)}</div></div>`;
+            },
+            career: () => {
+                if(AppState.careerRecommendation) {
+                    return `<div class="card">
+                        <div style="font-size:70px; text-align:center;">🎉</div>
+                        <h2 style="text-align:center;">Your Career Recommendation</h2>
+                        <p style="font-size:34px; font-weight:700; margin:25px 0; text-align:center;">${escapeHtml(AppState.careerRecommendation)}</p>
+                        <button id="restartCareer" class="btn btn-primary" style="display:block; margin:0 auto;"><i class="fas fa-sync-alt"></i> Restart Assessment</button>
+                    </div>`;
+                }
+                let content = AppState.careerStep === 1 ? `<fieldset><legend>Question 1 of 2: Which activity excites you most?</legend><label><input type="radio" name="q1" value="tech"> 💻 Building websites or apps</label><label><input type="radio" name="q1" value="data"> 📊 Analyzing data</label><label><input type="radio" name="q1" value="manage"> 👥 Managing teams</label></fieldset><button id="nextQ" class="btn btn-primary">Next →</button>` : `<fieldset><legend>Question 2 of 2: Preferred work environment?</legend><label><input type="radio" name="q2" value="remote"> 🏠 Remote</label><label><input type="radio" name="q2" value="office"> 🏢 Office</label><label><input type="radio" name="q2" value="hybrid"> 🔄 Hybrid</label></fieldset><button id="submitCareer" class="btn btn-primary">Get Recommendation →</button>`;
+                return `<div class="card"><h2><i class="fas fa-chart-line"></i> Career Pathfinder</h2>${content}<div id="careerError" class="${AppState.feedback.career ? 'error-msg' : ''}">${escapeHtml(AppState.feedback.career)}</div></div>`;
+            },
+            community: () => {
+                const filteredPosts = AppState.communityFilter === 'all' ? AppState.communityPosts : AppState.communityPosts.filter(p => p.category === AppState.communityFilter);
+                let postsHtml = filteredPosts.length === 0 ? `<div class="card"><h3>✨ No posts here yet</h3><p>Be the first to start a discussion in this category.</p></div>` : filteredPosts.map(p => `
+                        <article class="community-post">
+                            <div class="post-header"><div><h3>${escapeHtml(p.title)}</h3><p class="post-meta"><strong>${escapeHtml(p.author)}</strong> • ${p.timeAgo}</p></div><span class="post-tag">${p.category}</span></div>
+                            <div class="post-content">${escapeHtml(p.content)}</div>
+                            ${p.replies.length ? `<div class="replies-section">${p.replies.map(r => `<div class="reply-box"><strong>${escapeHtml(r.author)}</strong><p>${escapeHtml(r.text)}</p></div>`).join('')}</div>` : ''}
+                            <div class="post-actions"><button class="replyBtn btn btn-outline" data-id="${p.id}">💬 Reply</button></div>
+                            <div id="reply-form-${p.id}" style="display:none; margin-top:20px;"><input type="text" id="replyInput-${p.id}" placeholder="Write a reply..." maxlength="300"><button class="submitReply btn btn-primary" data-id="${p.id}">Post</button></div>
+                        </article>`).join('');
+                const activeFilter = AppState.communityFilter;
+                return `<div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;"><button id="newPostBtn" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</button><button id="deleteAllPostsBtn" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete All Posts</button></div><div class="category-filters"><button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">All Posts</button><button class="filter-btn ${activeFilter === 'Study Tips' ? 'active' : ''}" data-filter="Study Tips">Study Tips</button><button class="filter-btn ${activeFilter === 'Career' ? 'active' : ''}" data-filter="Career">Career</button><button class="filter-btn ${activeFilter === 'Motivation' ? 'active' : ''}" data-filter="Motivation">Motivation</button></div>${postsHtml}<div id="communityFeedback" class="${AppState.feedback.community ? 'success-feedback' : ''}">${escapeHtml(AppState.feedback.community)}</div>`;
+            },
+            analytics: () => `<div class="card"><h2><i class="fas fa-chart-simple"></i> Your Progress</h2><div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;"><div class="stat-card"><strong>${AppState.plannerTasks.length}</strong><br>Tasks</div><div class="stat-card"><strong>${AppState.analytics.streak}</strong><br>Day Streak</div></div><p style="margin-top:20px;">Keep up the great work! Consistent effort leads to success.</p></div>`,
+            feedback: () => `<div class="card"><h2><i class="fas fa-star"></i> Feedback Form</h2>
+                <div class="rating-container" id="ratingContainer">
+                    <input id="star1" type="radio" name="rating" value="1"><label for="star1">★</label>
+                    <input id="star2" type="radio" name="rating" value="2"><label for="star2">★</label>
+                    <input id="star3" type="radio" name="rating" value="3"><label for="star3">★</label>
+                    <input id="star4" type="radio" name="rating" value="4"><label for="star4">★</label>
+                    <input id="star5" type="radio" name="rating" value="5"><label for="star5">★</label>
+                </div>
+                <textarea id="userEval" rows="4" placeholder="Tell us about your experience..." maxlength="1000"></textarea>
+                <button id="submitEval" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+                <div id="evalFeedback" class="${AppState.feedback.eval ? 'success-feedback' : ''}">${escapeHtml(AppState.feedback.eval)}</div></div>`
+        };
+
+        function initScrollObserver() {
+            if (intersectionObserver) intersectionObserver.disconnect();
+            intersectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.card').forEach(card => intersectionObserver.observe(card));
+        }
+
+        function renderApp() {
+            if(!AppState.isLoggedIn) return;
+            const container = document.getElementById('mainContent');
+            if(!container) return;
+            container.classList.remove('page-enter');
+            container.innerHTML = pageRenderers[AppState.currentPage]();
+            void container.offsetHeight;
+            container.classList.add('page-enter');
+            updateActiveNav();
+            const heroBtn = document.getElementById('heroStartBtn');
+            if(heroBtn) heroBtn.onclick = () => { AppState.currentPage = 'ai-advisor'; saveState(); renderApp(); };
+            if(AppState.currentPage === 'ai-advisor') setTimeout(setupChat, 50);
+            if(AppState.currentPage === 'community') setupCommunityFilters();
+            initScrollObserver();
+            const clearBtn = document.getElementById('clearChatBtn');
+            if (clearBtn) clearBtn.onclick = () => clearChat();
+        }
+
+        function setupCommunityFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.onclick = () => {
+                    AppState.communityFilter = btn.getAttribute('data-filter');
+                    saveState();
+                    renderApp();
+                };
+            });
+            const deleteAllBtn = document.getElementById('deleteAllPostsBtn');
+            if (deleteAllBtn) deleteAllBtn.onclick = () => {
+                if (confirm("Delete all community posts?")) {
+                    AppState.communityPosts = [];
+                    saveState();
+                    setFeedback('community', 'All posts deleted');
+                    renderApp();
+                    triggerConfetti();
+                }
+            };
+        }
+
+        function updateActiveNav() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if(link.getAttribute('data-page') === AppState.currentPage) link.classList.add('active');
+                else link.classList.remove('active');
+            });
+        }
+
+        function setupChat() {
+            const form = document.getElementById('chatForm');
+            const input = document.getElementById('chatInput');
+            const container = document.getElementById('chatContainer');
+            if(!form || !input || !container) return;
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if(!text) { setFeedback('chat', 'Type a message', true); return; }
+                const userDiv = document.createElement('div');
+                userDiv.className = 'message user-msg';
+                userDiv.textContent = text;
+                container.appendChild(userDiv);
+                container.scrollTop = container.scrollHeight;
+                input.value = '';
+                AppState.chatHistory.push({ sender: "user", text });
+                saveState();
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+                container.appendChild(typingDiv);
+                container.scrollTop = container.scrollHeight;
+                setTimeout(() => {
+                    typingDiv.remove();
+                    const response = generateAIResponse(text);
+                    const aiDiv = document.createElement('div');
+                    aiDiv.className = 'message ai-msg';
+                    aiDiv.textContent = response;
+                    container.appendChild(aiDiv);
+                    container.scrollTop = container.scrollHeight;
+                    AppState.chatHistory.push({ sender: "ai", text: response });
+                    saveState();
+                }, 800);
+            };
+        }
+
+        const actionHandlers = {
+            nextQ: () => {
+                const sel = document.querySelector('input[name="q1"]:checked');
+                if(sel) { AppState.careerAnswers.q1 = sel.value; AppState.careerStep = 2; renderApp(); }
+                else setFeedback('career', 'Please select an option', true);
+            },
+            submitCareer: () => {
+                const sel = document.querySelector('input[name="q2"]:checked');
+                if(sel) {
+                    let base = AppState.careerAnswers.q1 === 'tech' ? '💻 Software Developer' : (AppState.careerAnswers.q1 === 'data' ? '📊 Data Analyst' : '📈 IT Project Manager');
+                    AppState.careerRecommendation = base + (sel.value === 'remote' ? ' (Remote/Hybrid)' : ' (Office/Collaborative)');
+                    saveState();
+                    renderApp();
+                    setTimeout(() => {
+                        canvasConfetti({
+                            particleCount: 200,
+                            spread: 120,
+                            startVelocity: 40,
+                            origin: { y: 0.6 }
+                        });
+                    }, 400);
+                } else {
+                    setFeedback('career', 'Please select your preference', true);
+                }
+            },
+            restartCareer: () => { AppState.careerRecommendation = null; AppState.careerStep = 1; AppState.careerAnswers = { q1: '', q2: '' }; renderApp(); },
+            newPostBtn: () => showNewPostModal(),
+            submitEval: () => {
+                const evalText = document.getElementById('userEval')?.value;
+                const rating = document.querySelector('input[name="rating"]:checked')?.value || 0;
+                if(evalText) {
+                    AppState.userFeedback.push({ date: new Date().toISOString(), rating, text: evalText });
+                    saveState();
+                    setFeedback('eval', 'Thank you for your feedback!');
+                    document.getElementById('userEval').value = '';
+                    triggerConfetti();
+                }
+            }
+        };
+        function globalClickHandler(e) {
+            const target = e.target;
+            if (target.id === 'darkModeToggle') {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+                const btn = document.getElementById('darkModeToggle');
+                if(btn) btn.textContent = document.body.classList.contains('dark-mode') ? "☀️ Light" : "🌙 Dark";
+                return;
+            }
+            if (target.id === 'logoutBtn') { logout(); return; }
+            const navBtn = target.closest('.nav-link');
+            if(navBtn && navBtn.tagName === 'BUTTON' && navBtn.id !== 'darkModeToggle' && navBtn.id !== 'logoutBtn') {
+                AppState.currentPage = navBtn.getAttribute('data-page');
+                saveState(); renderApp(); return;
+            }
+            const card = target.closest('.dashboard-card');
+            if(card && card.getAttribute('data-nav')) {
+                AppState.currentPage = card.getAttribute('data-nav');
+                saveState(); renderApp(); return;
+            }
+            const edit = target.closest('.edit-task');
+            if(edit) { const id = edit.getAttribute('data-id'); const task = AppState.plannerTasks.find(t => t.id === id); if(task) showEditTaskModal(task); return; }
+            const del = target.closest('.delete-task');
+            if(del) { const id = del.getAttribute('data-id'); const task = AppState.plannerTasks.find(t => t.id === id); if(task) { const deleted = {...task}; AppState.plannerTasks = AppState.plannerTasks.filter(t => t.id !== id); saveState(); showUndoSnackbar(deleted); renderApp(); } return; }
+            if(target.id === 'showAddTaskFormBtn') {
+                const formDiv = document.getElementById('addTaskForm');
+                if(formDiv) {
+                    formDiv.innerHTML = `<div><label>Task name</label><input id="newTaskName" maxlength="100"></div><div><label>Due date</label><input type="date" id="newTaskDue" value="${getCurrentDate()}"></div><div><label>Priority</label><select id="newTaskPriority"><option>High</option><option>Medium</option><option>Low</option></select></div><div><label>Progress (%)</label><input type="range" id="newTaskProgress" min="0" max="100" value="0"></div><div style="margin-top:16px;"><button id="confirmAddTask" class="btn btn-primary"><i class="fas fa-plus"></i> Add</button> <button id="cancelAddTask" class="btn btn-outline">Cancel</button></div>`;
+                    formDiv.style.display = 'block';
+                    document.getElementById('confirmAddTask').onclick = () => {
+                        const name = document.getElementById('newTaskName')?.value.trim();
+                        if(!name) { setFeedback('planner', 'Task name required', true); return; }
+                        AppState.plannerTasks.push({
+                            id: crypto.randomUUID(),
+                            name,
+                            created: getCurrentDate(),
+                            dueDate: document.getElementById('newTaskDue')?.value || 'No date',
+                            priority: document.getElementById('newTaskPriority')?.value || 'Medium',
+                            completed: false,
+                            progress: parseInt(document.getElementById('newTaskProgress')?.value) || 0
+                        });
+                        saveState();
+                        formDiv.style.display = 'none';
+                        setFeedback('planner', '✓ Task added!');
+                        renderApp();
+                        triggerConfetti();
+                    };
+                    document.getElementById('cancelAddTask').onclick = () => { formDiv.style.display = 'none'; };
+                }
+                return;
+            }
+            const replyBtn = target.closest('.replyBtn');
+            if(replyBtn) { const id = replyBtn.getAttribute('data-id'); const form = document.getElementById(`reply-form-${id}`); if(form) form.style.display = form.style.display === 'none' ? 'block' : 'none'; return; }
+            const submitReply = target.closest('.submitReply');
+            if(submitReply) {
+                const pid = submitReply.getAttribute('data-id');
+                const inp = document.getElementById(`replyInput-${pid}`);
+                if(inp && inp.value.trim()) {
+                    const post = AppState.communityPosts.find(p => p.id === pid);
+                    if(post) {
+                        post.replies.push({ author: AppState.userName, text: inp.value });
+                        saveState();
+                        setFeedback('community', 'Reply posted!');
+                        renderApp();
+                        triggerConfetti();
+                    }
+                }
+                return;
+            }
+            if(actionHandlers[target.id]) { actionHandlers[target.id](); }
+        }
+        function globalKeydownHandler(e) {
+            const card = e.target.closest('.dashboard-card');
+            if(card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); card.click(); }
+        }
+        function attachEvents() {
+            if(!bodyHandlerAttached) {
+                document.body.addEventListener('click', globalClickHandler);
+                document.body.addEventListener('keydown', globalKeydownHandler);
+                bodyHandlerAttached = true;
+            }
+        }
+
+        function updateThemeButton() {
+            const btn = document.getElementById('darkModeToggle');
+            if(btn) btn.textContent = document.body.classList.contains('dark-mode') ? "☀️ Light" : "🌙 Dark";
+        }
+        function initDarkMode() {
+            if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+            updateThemeButton();
+        }
+        function logout() {
+            AppState.isLoggedIn = false;
+            saveState();
+            document.querySelector('header').style.display = 'none';
+            document.querySelector('main.container').style.display = 'none';
+            document.getElementById('mainFooter').style.display = 'none';
+            createAuthModal();
+            announce('Logged out');
+        }
+        function initializeApp() {
+            loadState();
+            // Clean up any stray messages that don't belong
+            AppState.chatHistory = AppState.chatHistory.filter(msg => 
+                !msg.text.toLowerCase().includes("thanks for sharing") &&
+                msg.text.toLowerCase() !== "yes" &&
+                !msg.text.toLowerCase().includes("pomodoro")
+            );
+            // Ensure welcome message is the first message
+            if (!AppState.chatHistory.length || AppState.chatHistory[0].text !== WELCOME_MESSAGE.text) {
+                AppState.chatHistory = [WELCOME_MESSAGE, ...AppState.chatHistory];
+            }
+            // Ensure fresh community posts
+            if (!AppState.communityPosts || AppState.communityPosts.length === 0 || AppState.communityPosts.some(p => p.author === "JaneDoe" || p.author === "TechWalker")) {
+                AppState.communityPosts = [
+                    { id: crypto.randomUUID(), author: "StudyMaster", timeAgo: "20 min ago", title: "📚 Study Tip: Active Recall", content: "Instead of rereading notes, close your notebook and try explaining concepts from memory.", category: "Study Tips", replies: [] },
+                    { id: crypto.randomUUID(), author: "FocusHub", timeAgo: "1h ago", title: "🧠 Avoid Distractions", content: "Try keeping your phone away while studying. Focus improves when interruptions disappear.", category: "Study Tips", replies: [] },
+                    { id: crypto.randomUUID(), author: "ExamReady", timeAgo: "2h ago", title: "📝 Exam Preparation Advice", content: "Start revision early and practice questions regularly rather than cramming.", category: "Study Tips", replies: [] },
+                    { id: crypto.randomUUID(), author: "CareerNavigator", timeAgo: "45 min ago", title: "💼 Top Skills Employers Want", content: "Communication, teamwork, adaptability and critical thinking are valuable in nearly every field.", category: "Career", replies: [] },
+                    { id: crypto.randomUUID(), author: "FutureReady", timeAgo: "3h ago", title: "🚀 Choosing a Career Path", content: "Find something that combines your strengths, interests and long-term goals.", category: "Career", replies: [] },
+                    { id: crypto.randomUUID(), author: "TechVision", timeAgo: "6h ago", title: "🌐 Careers Growing Fast", content: "Software development, AI, cybersecurity and data analysis continue growing rapidly.", category: "Career", replies: [] },
+                    { id: crypto.randomUUID(), author: "RiseDaily", timeAgo: "25 min ago", title: "🌟 Small Steps Matter", content: "Progress does not need to be huge every day. Consistency creates success.", category: "Motivation", replies: [] },
+                    { id: crypto.randomUUID(), author: "DreamBuilder", timeAgo: "2h ago", title: "✨ Keep Going", content: "You are stronger than you think. Every challenge teaches you something valuable.", category: "Motivation", replies: [] },
+                    { id: crypto.randomUUID(), author: "MindsetHub", timeAgo: "4h ago", title: "🔥 Believe in Yourself", content: "Confidence grows from action. Start before you feel fully ready.", category: "Motivation", replies: [] }
+                ];
+                saveState();
+            }
+            initDarkMode();
+            if(AppState.isLoggedIn) {
+                document.querySelector('header').style.display = 'block';
+                document.querySelector('main.container').style.display = 'block';
+                document.getElementById('mainFooter').style.display = 'block';
+                renderApp();
+            } else {
+                document.querySelector('header').style.display = 'none';
+                document.querySelector('main.container').style.display = 'none';
+                document.getElementById('mainFooter').style.display = 'none';
+                createAuthModal();
+            }
+            attachEvents();
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('mainHeader');
+                if (header) {
+                    if (window.scrollY > 50) header.classList.add('scrolled');
+                    else header.classList.remove('scrolled');
+                }
+            });
+            setTimeout(() => { const loader = document.getElementById('loader'); if(loader) loader.remove(); }, 1500);
+        }
+        initializeApp();
+
+        // Star rating left-to-right fill
+        document.addEventListener("change", (e) => {
+            if (e.target.matches('input[name="rating"]')) {
+                const selected = parseInt(e.target.value);
+                const labels = document.querySelectorAll('.rating-container label');
+                labels.forEach((label, index) => {
+                    label.classList.toggle("active", index < selected);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
